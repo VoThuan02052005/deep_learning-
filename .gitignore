@@ -6,7 +6,7 @@ __pycache__/
 
 # Data and Models
 data/raw/
-data/staging/
+data/staging/data_cho_thue.csv 
 data/processed/
 /models/
 urls.db
