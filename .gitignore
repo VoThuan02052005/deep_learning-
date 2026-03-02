@@ -8,7 +8,7 @@ __pycache__/
 data/raw/
 data/staging/
 data/processed/
-models/
+/models/
 urls.db
 
 # Documentation
