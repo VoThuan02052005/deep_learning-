@@ -17,7 +17,7 @@
 
 ## 📌 Giới thiệu
 
-**CITA House Price Predictor** dự đoán giá nhà đất tại Việt Nam (đơn vị: **tỷ VNĐ**) dựa trên các đặc trưng: diện tích, số phòng, vị trí, loại hình, pháp lý.
+**House Price Predictor** dự đoán giá nhà đất tại Việt Nam (đơn vị: **tỷ VNĐ**) dựa trên các đặc trưng: diện tích, số phòng, vị trí, loại hình, pháp lý.
 
 Điểm nổi bật:
 - **MLP tự triển khai** bằng NumPy thuần (Adam optimizer, Dropout, Early Stopping, He init)
