@@ -96,12 +96,16 @@ st.markdown("""
 #   4. Chép <FILE_ID> vào đây
 GDRIVE_IDS = {
     "models/mlp_model.joblib":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
-    "models/preprocessor.pkl":  "1E0i7z96gcbdtn7UN9GsjqIDdASRp3pgB",
+    "models/preprocessor.pkl":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
 }
-# Kích thước tối thiểu để phát hiện file bị lỗi (tải về HTML thay vì file thật)
+# Kích thước tối thiểu để phát hiện file HTML lỗi
 MIN_SIZES = {
     "models/mlp_model.joblib": 50 * 1024 * 1024,   # ≥ 50 MB
     "models/preprocessor.pkl": 5 * 1024,            # ≥ 5 KB
+}
+# Kích thước tối đa để phát hiện file bị cache sai (quá lớn)
+MAX_SIZES = {
+    "models/preprocessor.pkl": 5 * 1024 * 1024,    # ≤ 5 MB (thực tế ~22 KB)
 }
 
 def _download_if_missing():
@@ -110,11 +114,13 @@ def _download_if_missing():
     for path, file_id in GDRIVE_IDS.items():
         fname = path.split("/")[-1]
 
-        # Kiểm tra nếu file đã tồn tại nhưng quá nhỏ (có thể là HTML lỗi)
+        # Kiểm tra nếu file bị lỗi: quá nhỏ (HTML) hoặc quá lớn (cache sai)
         if os.path.exists(path):
             size = os.path.getsize(path)
-            if size < MIN_SIZES.get(path, 0):
-                st.warning(f"⚠️ Phát hiện {fname} bị lỗi ({size} bytes), đang tải lại...")
+            too_small = size < MIN_SIZES.get(path, 0)
+            too_large = size > MAX_SIZES.get(path, float("inf"))
+            if too_small or too_large:
+                st.warning(f"⚠️ {fname} bị lỗi ({size//1024} KB), đang tải lại...")
                 os.remove(path)
 
         if not os.path.exists(path):
