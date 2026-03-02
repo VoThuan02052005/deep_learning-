@@ -1,0 +1,25 @@
+data:
+  raw_path: data/raw/data.csv
+  target: price
+
+split:
+  test_size: 0.2
+
+features:
+  categorical:
+    - city
+    - district
+  numerical:
+    - area
+    - bedrooms
+
+preprocessing:
+  scale: standard        # none | standard | minmax
+  log_target: false
+
+model:
+  type: mlp
+  hidden_layers: [64, 32]
+  activation: relu
+  learning_rate: 0.001
+  epochs: 100

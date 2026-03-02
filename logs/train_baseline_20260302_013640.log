@@ -1,0 +1,7 @@
+[2026-03-02 01:36:40] [train_baseline] [INFO] Starting baseline training pipeline
+[2026-03-02 01:36:40] [train_baseline] [INFO] Loading data from data/staging/data_ban.csv
+[2026-03-02 01:36:40] [train_baseline] [INFO] Building features
+[2026-03-02 01:36:42] [train_baseline] [INFO] Training MeanBaseline model
+[2026-03-02 01:36:42] [train_baseline] [INFO] Evaluating model
+[2026-03-02 01:36:42] [train_baseline] [INFO] Results: {'MAE': 0.7761679431878821, 'RMSE': np.float64(0.9936002522747343), 'R2': -1.0382611606019054e-06, 'train_time': 0.0002608299255371094}
+[2026-03-02 01:36:42] [train_baseline] [SUCCESS] Model saved to models/baseline_model.joblib

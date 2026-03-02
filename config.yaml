@@ -1,0 +1,14 @@
+USER_DATA_DIR: "C:\\Users\\vothu\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
+PROFILE_DIR: "profile-directory=Default"
+CSV_FILE: "gia_nha.csv"
+HOST : "localhost"
+USER : "root"
+PASSWORD : "thuan@02052005"
+DATABASE : "gia_nha"
+
+CRAWL:
+  START_PAGE: 5000
+  END_PAGE:   10000
+  BATCH_SIZE: 10 
+  SLEEP_BETWEEN_BATCH_MIN: 5
+  SLEEP_BETWEEN_BATCH_MAX: 15

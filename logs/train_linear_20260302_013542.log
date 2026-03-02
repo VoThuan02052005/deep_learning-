@@ -1,0 +1,15 @@
+[2026-03-02 01:35:42] [train_linear] [INFO] Starting linear models training pipeline
+[2026-03-02 01:35:42] [train_linear] [INFO] Loading data from data/staging/data_ban.csv
+[2026-03-02 01:35:42] [train_linear] [INFO] Building features
+[2026-03-02 01:35:44] [train_linear] [INFO] Training Linear model
+[2026-03-02 01:35:48] [train_linear] [INFO] Evaluating Linear
+[2026-03-02 01:35:48] [train_linear] [INFO] Linear Results: {'MAE': 0.3397272397138128, 'RMSE': np.float64(0.5035225754028776), 'R2': 0.7431882096637483, 'train_time': 4.596685409545898}
+[2026-03-02 01:35:48] [train_linear] [SUCCESS] Linear model saved to models/linear_linear_model.joblib
+[2026-03-02 01:35:48] [train_linear] [INFO] Training Ridge model
+[2026-03-02 01:35:49] [train_linear] [INFO] Evaluating Ridge
+[2026-03-02 01:35:50] [train_linear] [INFO] Ridge Results: {'MAE': 0.33950243667218133, 'RMSE': np.float64(0.5014757050325362), 'R2': 0.7452718978179353, 'train_time': 1.0397000312805176}
+[2026-03-02 01:35:50] [train_linear] [SUCCESS] Ridge model saved to models/linear_ridge_model.joblib
+[2026-03-02 01:35:50] [train_linear] [INFO] Training Lasso model
+[2026-03-02 01:35:54] [train_linear] [INFO] Evaluating Lasso
+[2026-03-02 01:35:54] [train_linear] [INFO] Lasso Results: {'MAE': 0.3668118578553919, 'RMSE': np.float64(0.5314425246536201), 'R2': 0.7139185687463246, 'train_time': 4.16264796257019}
+[2026-03-02 01:35:54] [train_linear] [SUCCESS] Lasso model saved to models/linear_lasso_model.joblib

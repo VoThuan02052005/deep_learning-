@@ -1,0 +1,22 @@
+# OS independent files
+.DS_Store
+*.swp
+*.pyc
+__pycache__/
+
+# Data and Models
+data/raw/
+data/staging/
+data/processed/
+models/
+urls.db
+
+# Documentation
+.gemini/
+notebooks/figures/
+
+
+# Local environment
+.venv/
+env/
+.env

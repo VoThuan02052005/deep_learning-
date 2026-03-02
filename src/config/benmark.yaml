@@ -1,0 +1,35 @@
+preprocessing:
+  - id: P0
+    scale: none
+    log_target: false
+
+  - id: P1
+    scale: standard
+    log_target: false
+
+  - id: P2
+    scale: minmax
+    log_target: false
+
+  - id: P3
+    scale: standard
+    log_target: true
+
+models:
+  - id: M0
+    hidden_layers: [64]
+    activation: relu
+
+  - id: M1
+    hidden_layers: [64, 32]
+    activation: relu
+
+  - id: M2
+    hidden_layers: [64, 32]
+    activation: leaky_relu
+    l2: 0.0001
+
+  - id: M3
+    hidden_layers: [128, 64, 32]
+    activation: relu
+    dropout: 0.3
