@@ -95,8 +95,8 @@ st.markdown("""
 #   3. Link dạng: https://drive.google.com/file/d/<FILE_ID>/view
 #   4. Chép <FILE_ID> vào đây
 GDRIVE_IDS = {
-    "models/mlp_model.joblib":  "REPLACE_WITH_MLP_MODEL_GDRIVE_ID",
-    "models/preprocessor.pkl":  "REPLACE_WITH_PREPROCESSOR_GDRIVE_ID",
+    "models/mlp_model.joblib":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
+    "models/preprocessor.pkl":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
 }
 
 def _download_if_missing():
