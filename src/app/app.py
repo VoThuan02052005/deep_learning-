@@ -6,11 +6,11 @@ import os
 import sys
 from datetime import datetime
 
-# Add project root to path for imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-from src.models.custom_mlp import CustomMLP
-from src.data.validate.missing_values import clean_missing_values
+# ─── path setup (hoạt động cả local lẫn Streamlit Cloud) ───────────────────
+_here = os.path.dirname(os.path.abspath(__file__))       # .../src/app
+_root = os.path.abspath(os.path.join(_here, "../.."))     # project root
+if _root not in sys.path:
+    sys.path.insert(0, _root)
 
 
 def standardize_legal(text: str) -> str:
@@ -92,6 +92,8 @@ st.markdown("""
 @st.cache_resource
 def load_assets():
     """Load model and preprocessor objects with caching."""
+    from src.models.custom_mlp import CustomMLP   # import here — after sys.path is ready
+
     model_path = "models/mlp_model.joblib"
     prep_path  = "models/preprocessor.pkl"
 
