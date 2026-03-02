@@ -96,7 +96,7 @@ st.markdown("""
 #   4. Chép <FILE_ID> vào đây
 GDRIVE_IDS = {
     "models/mlp_model.joblib":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
-    "models/preprocessor.pkl":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
+    "models/preprocessor.pkl":  "1E0i7z96gcbdtn7UN9GsjqIDdASRp3pgB",
 }
 # Kích thước tối thiểu để phát hiện file bị lỗi (tải về HTML thay vì file thật)
 MIN_SIZES = {
