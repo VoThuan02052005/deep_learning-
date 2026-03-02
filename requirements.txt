@@ -1,10 +1,7 @@
-beautifulsoup4
-matplotlib
 numpy
 pandas
-PyYAML
 scikit-learn
-selenium
-webdriver-manager
-tensorflow
 joblib
+streamlit==1.31.0
+PyYAML
+gdown

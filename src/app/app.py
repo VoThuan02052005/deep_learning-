@@ -87,6 +87,34 @@ st.markdown("""
 
 
 # ─────────────────────────────────────────────────────────
+# GOOGLE DRIVE MODEL IDs  (thay bằng ID thực của bạn)
+# ─────────────────────────────────────────────────────────
+# Hướng dẫn lấy ID:
+#   1. Upload file lên Google Drive
+#   2. Chuột phải → "Chia sẻ" → "Bất kỳ ai có đường liên kết" → Sao chép liên kết
+#   3. Link dạng: https://drive.google.com/file/d/<FILE_ID>/view
+#   4. Chép <FILE_ID> vào đây
+GDRIVE_IDS = {
+    "models/mlp_model.joblib":  "REPLACE_WITH_MLP_MODEL_GDRIVE_ID",
+    "models/preprocessor.pkl":  "REPLACE_WITH_PREPROCESSOR_GDRIVE_ID",
+}
+
+def _download_if_missing():
+    """Download model files from Google Drive if not present (Streamlit Cloud)."""
+    try:
+        import gdown
+    except ImportError:
+        return  # gdown not installed, skip
+
+    os.makedirs("models", exist_ok=True)
+    for path, file_id in GDRIVE_IDS.items():
+        if not os.path.exists(path) and not file_id.startswith("REPLACE"):
+            with st.spinner(f"⬇️ Đang tải {path.split('/')[-1]} từ Google Drive..."):
+                url = f"https://drive.google.com/uc?id={file_id}"
+                gdown.download(url, path, quiet=False)
+
+
+# ─────────────────────────────────────────────────────────
 # CACHED LOADING
 # ─────────────────────────────────────────────────────────
 @st.cache_resource
@@ -94,11 +122,13 @@ def load_assets():
     """Load model and preprocessor objects with caching."""
     from src.models.custom_mlp import CustomMLP   # import here — after sys.path is ready
 
+    _download_if_missing()   # tải model từ GDrive nếu chạy trên Cloud
+
     model_path = "models/mlp_model.joblib"
     prep_path  = "models/preprocessor.pkl"
 
     if not os.path.exists(model_path) or not os.path.exists(prep_path):
-        st.error(f"Required files not found: {model_path} or {prep_path}")
+        st.error("⚠️ Không tìm thấy file model. Vui lòng cập nhật GDRIVE_IDS trong app.py.")
         st.stop()
 
     model        = joblib.load(model_path)
