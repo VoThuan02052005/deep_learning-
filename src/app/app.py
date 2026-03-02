@@ -98,25 +98,48 @@ GDRIVE_IDS = {
     "models/mlp_model.joblib":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
     "models/preprocessor.pkl":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
 }
+# Kích thước tối thiểu để phát hiện file bị lỗi (tải về HTML thay vì file thật)
+MIN_SIZES = {
+    "models/mlp_model.joblib": 50 * 1024 * 1024,   # ≥ 50 MB
+    "models/preprocessor.pkl": 5 * 1024,            # ≥ 5 KB
+}
 
 def _download_if_missing():
     """Download model files from Google Drive if not present (Streamlit Cloud)."""
     try:
         import gdown
     except ImportError:
+        st.warning("⚠️ gdown chưa được cài. Chạy: pip install gdown")
         return
 
     os.makedirs("models", exist_ok=True)
     for path, file_id in GDRIVE_IDS.items():
+        fname = path.split("/")[-1]
+
+        # Kiểm tra nếu file đã tồn tại nhưng quá nhỏ (có thể là HTML lỗi)
+        if os.path.exists(path):
+            size = os.path.getsize(path)
+            if size < MIN_SIZES.get(path, 0):
+                st.warning(f"⚠️ Phát hiện {fname} bị lỗi ({size} bytes), đang tải lại...")
+                os.remove(path)
+
         if not os.path.exists(path):
-            with st.spinner(f"⬇️ Đang tải {path.split('/')[-1]} từ Google Drive..."):
-                gdown.download(
+            with st.spinner(f"⬇️ Đang tải {fname} từ Google Drive..."):
+                result = gdown.download(
                     id=file_id,
                     output=path,
                     quiet=False,
-                    fuzzy=True        # bypass virus-scan warning cho file lớn
+                    fuzzy=True
                 )
-
+                if result is None or not os.path.exists(path):
+                    st.error(f"❌ Tải {fname} thất bại. Kiểm tra file có được chia sẻ công khai chưa.")
+                    st.stop()
+                # Kiểm tra lại kích thước sau khi tải
+                size = os.path.getsize(path)
+                if size < MIN_SIZES.get(path, 0):
+                    os.remove(path)
+                    st.error(f"❌ {fname} bị lỗi (chỉ {size} bytes). Google Drive có thể chưa chia sẻ công khai.")
+                    st.stop()
 
 # ─────────────────────────────────────────────────────────
 # CACHED LOADING
@@ -126,7 +149,7 @@ def load_assets():
     """Load model and preprocessor objects with caching."""
     from src.models.custom_mlp import CustomMLP   # import here — after sys.path is ready
 
-    _download_if_missing()   # tải model từ GDrive nếu chạy trên Cloud
+    _download_if_missing()
 
     model_path = "models/mlp_model.joblib"
     prep_path  = "models/preprocessor.pkl"
@@ -137,7 +160,19 @@ def load_assets():
 
     model        = joblib.load(model_path)
     preprocessor = joblib.load(prep_path)
+
+    # Validate đúng loại object
+    if not isinstance(preprocessor, dict):
+        st.error(f"❌ preprocessor.pkl sai định dạng (type: {type(preprocessor).__name__}). "
+                 f"File sizes — mlp: {os.path.getsize(model_path)//1024}KB, "
+                 f"prep: {os.path.getsize(prep_path)//1024}KB")
+        st.stop()
+    if not hasattr(model, "predict"):
+        st.error(f"❌ mlp_model.joblib sai định dạng (type: {type(model).__name__}).")
+        st.stop()
+
     return model, preprocessor
+
 
 
 @st.cache_data
