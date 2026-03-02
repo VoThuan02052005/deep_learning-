@@ -95,8 +95,8 @@ st.markdown("""
 #   3. Link dạng: https://drive.google.com/file/d/<FILE_ID>/view
 #   4. Chép <FILE_ID> vào đây
 GDRIVE_IDS = {
-    "models/mlp_model.joblib":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
-    "models/preprocessor.pkl":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
+    "models/mlp_model.joblib":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
+    "models/preprocessor.pkl":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
 }
 
 def _download_if_missing():
@@ -104,14 +104,18 @@ def _download_if_missing():
     try:
         import gdown
     except ImportError:
-        return  # gdown not installed, skip
+        return
 
     os.makedirs("models", exist_ok=True)
     for path, file_id in GDRIVE_IDS.items():
-        if not os.path.exists(path) and not file_id.startswith("REPLACE"):
+        if not os.path.exists(path):
             with st.spinner(f"⬇️ Đang tải {path.split('/')[-1]} từ Google Drive..."):
-                url = f"https://drive.google.com/uc?id={file_id}"
-                gdown.download(url, path, quiet=False)
+                gdown.download(
+                    id=file_id,
+                    output=path,
+                    quiet=False,
+                    fuzzy=True        # bypass virus-scan warning cho file lớn
+                )
 
 
 # ─────────────────────────────────────────────────────────
