@@ -106,12 +106,6 @@ MIN_SIZES = {
 
 def _download_if_missing():
     """Download model files from Google Drive if not present (Streamlit Cloud)."""
-    try:
-        import gdown
-    except ImportError:
-        st.warning("⚠️ gdown chưa được cài. Chạy: pip install gdown")
-        return
-
     os.makedirs("models", exist_ok=True)
     for path, file_id in GDRIVE_IDS.items():
         fname = path.split("/")[-1]
@@ -124,22 +118,24 @@ def _download_if_missing():
                 os.remove(path)
 
         if not os.path.exists(path):
+            # Chỉ cần gdown khi thực sự thiếu file
+            try:
+                import gdown
+            except ImportError:
+                st.error("⚠️ gdown chưa được cài. Chạy: pip install gdown")
+                st.stop()
+
             with st.spinner(f"⬇️ Đang tải {fname} từ Google Drive..."):
-                result = gdown.download(
-                    id=file_id,
-                    output=path,
-                    quiet=False,
-                    fuzzy=True
-                )
+                result = gdown.download(id=file_id, output=path, quiet=False, fuzzy=True)
                 if result is None or not os.path.exists(path):
                     st.error(f"❌ Tải {fname} thất bại. Kiểm tra file có được chia sẻ công khai chưa.")
                     st.stop()
-                # Kiểm tra lại kích thước sau khi tải
                 size = os.path.getsize(path)
                 if size < MIN_SIZES.get(path, 0):
                     os.remove(path)
                     st.error(f"❌ {fname} bị lỗi (chỉ {size} bytes). Google Drive có thể chưa chia sẻ công khai.")
                     st.stop()
+
 
 # ─────────────────────────────────────────────────────────
 # CACHED LOADING
