@@ -98,14 +98,10 @@ GDRIVE_IDS = {
     "models/mlp_model.joblib":  "1eN-B2YIwfw_cLE9Re_krf9Pj7qsDQnM5",
     "models/preprocessor.pkl":  "1VQIhL5o0o1WIpkSRX5mDK3ZND_CxNpyE",
 }
-# Kích thước tối thiểu để phát hiện file HTML lỗi
+# Kích thước tối thiểu để phát hiện file bị lỗi (tải về HTML thay vì file thật)
 MIN_SIZES = {
     "models/mlp_model.joblib": 50 * 1024 * 1024,   # ≥ 50 MB
     "models/preprocessor.pkl": 5 * 1024,            # ≥ 5 KB
-}
-# Kích thước tối đa để phát hiện file bị cache sai (quá lớn)
-MAX_SIZES = {
-    "models/preprocessor.pkl": 5 * 1024 * 1024,    # ≤ 5 MB (thực tế ~22 KB)
 }
 
 def _download_if_missing():
@@ -114,13 +110,11 @@ def _download_if_missing():
     for path, file_id in GDRIVE_IDS.items():
         fname = path.split("/")[-1]
 
-        # Kiểm tra nếu file bị lỗi: quá nhỏ (HTML) hoặc quá lớn (cache sai)
+        # Kiểm tra nếu file đã tồn tại nhưng quá nhỏ (có thể là HTML lỗi)
         if os.path.exists(path):
             size = os.path.getsize(path)
-            too_small = size < MIN_SIZES.get(path, 0)
-            too_large = size > MAX_SIZES.get(path, float("inf"))
-            if too_small or too_large:
-                st.warning(f"⚠️ {fname} bị lỗi ({size//1024} KB), đang tải lại...")
+            if size < MIN_SIZES.get(path, 0):
+                st.warning(f"⚠️ Phát hiện {fname} bị lỗi ({size} bytes), đang tải lại...")
                 os.remove(path)
 
         if not os.path.exists(path):
@@ -132,7 +126,9 @@ def _download_if_missing():
                 st.stop()
 
             with st.spinner(f"⬇️ Đang tải {fname} từ Google Drive..."):
-                result = gdown.download(id=file_id, output=path, quiet=False, fuzzy=True)
+                # Dùng URL trực tiếp với confirm=t (bypass virus-scan, tránh lỗi fuzzy)
+                url = f"https://drive.google.com/uc?export=download&id={file_id}&confirm=t"
+                result = gdown.download(url, output=path, quiet=False, fuzzy=False)
                 if result is None or not os.path.exists(path):
                     st.error(f"❌ Tải {fname} thất bại. Kiểm tra file có được chia sẻ công khai chưa.")
                     st.stop()
